@@ -67,17 +67,38 @@ library(widyr)
 library(knitr)
 library(lubridate)
 library(magrittr)
-#library(Metrics)
+# library(Metrics)
+library(ModelMetrics)
 library(jsonlite)
 library(reticulate)
-library(quantmod)
 library(httr)
 library(kableExtra)
 # library(doParallel) # If wanted
 
 
+# Stock API:
+library(quantmod)
+library(tidyquant)
+library(alphavantager)
 
 
+# Prophet:
+library(prophet)
+
+# Forecast and tseries (ARIMA):
+library(forecast)
+library(tseries)
+
+# LSTM:
+library(keras)
+
+
+
+## To solve conflicted libraries if library Metrics is loaded
+
+# accuracy function is present in both Metrics and forecast
+# library(conflicted)
+# conflict_prefer("accuracy","forecast")
 
 
 

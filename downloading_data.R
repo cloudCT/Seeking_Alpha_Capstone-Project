@@ -17,7 +17,7 @@
 
 # Install the API R package and load library:
 
-install.packages("alphavantager")
+# install.packages("alphavantager")
 # Or
 # devtools::install_github("business-science/alphavantager")
 
@@ -83,13 +83,14 @@ tq_get("MSFT", get ="dividends")
 av_api_key("YBEX2W45GF6IXNJG")
 
 
+# This approach would not work:
+# msft_fin <- av_get(symbol     = "MSFT",
+#                    av_fun     = "BALANCE_SHEET",
+#                    outputsize = "full")
+# 
+# msft_fin
 
-msft_fin <- av_get(symbol     = "MSFT",
-                   av_fun     = "BALANCE_SHEET",
-                   outputsize = "full")
-
-msft_fin
-
+# This instead:
 library(httr)
 base_url <- "https://www.alphavantage.co"
 myquery <- list("function"="BALANCE_SHEET",

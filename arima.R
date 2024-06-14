@@ -1,5 +1,3 @@
-
-
 ##################################
 ################## ARIMA
 ###########################
@@ -228,7 +226,6 @@ plot(preds_own_adj, include = 50)
 
 ### Returns set eval:
 accuracy(preds_auto_ret, msft_month_test_ret)
-
 
 rmse(preds_auto_ret$mean,msft_month_test_ret)
 
@@ -1013,12 +1010,14 @@ p <- exp(diffinv(preds_mon_fin_2$mean/100,
                  xi = log(msft_monthly_train_a$adjusted[2510])))
 preds_month_a <- p[2:length(p)]
 
-
-preds_month_plot <- msft_monthly_test_a %>% cbind(p_month_2) %>% 
+preds_month_plot <- msft_monthly_test_a %>% cbind(preds_month_a) %>% 
   rename(preds = "preds_month_a") %>% 
   pivot_longer(cols = c(adjusted,preds),values_to = "price", names_to = "type") %>% 
   ggplot(aes(x = date, y = price, color = type))+
   geom_line()
+
+
+
 
 
 ############################

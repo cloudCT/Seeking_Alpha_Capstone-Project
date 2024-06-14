@@ -58,7 +58,7 @@ msft_x_daily_final_test <- msft_x[length(msft_x$ds),]
 #                                                                        period)
 
 
-msft_x %>% arrange(desc(ds)) %>% view()
+# msft_x %>% arrange(desc(ds)) %>% view()
 
 msft_x_monthly_train <- msft_x[1:sum(length(msft_x$ds)-40),]
 
@@ -131,7 +131,7 @@ macd_x <-  msft_x_monthly_train %>% left_join(msft_macd_x) %>%
   select(ds,macd) %>% 
   rename(y = macd)
 
-msft_macd_test <- msft_x_monthly_test %>% left_join(msft_macd_x) %>% 
+msft_x_macd_test <- msft_x_monthly_test %>% left_join(msft_macd_x) %>% 
   select(ds,macd) %>% 
   rename(y = macd)
 
@@ -213,7 +213,7 @@ msft_day_test_ret <-  100*diff(log(msft_day_test_ret))
 ####### Year
 ###### First train/test split "yearly" (next year prediction; 260-trading days)
 
-msft_a %>% arrange(desc(date)) %>% view()
+# msft_a %>% arrange(desc(date)) %>% view()
 
 
 msft_yearly_train_a <- msft_a[1:sum(length(msft_a$date)-520),]

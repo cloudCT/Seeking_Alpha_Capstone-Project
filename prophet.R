@@ -1,4 +1,3 @@
-
 ##################################
 ################## Prophet
 ###########################
@@ -6,7 +5,7 @@
 
 # Install prophet and load library:
 
-install.packages("prophet")
+# install.packages("prophet")
 
 library(prophet)
 
@@ -59,7 +58,7 @@ msft_future_2 <- make_future_dataframe(msft_pro_mod,periods = 365)
 
 msft_preds_2 <- predict(msft_pro_mod_2, msft_future_2)
 
-msft_preds_2
+# msft_preds_2
 
 dyplot.prophet(msft_pro_mod_2,msft_preds_2)
 
@@ -102,7 +101,7 @@ msft_preds_day <- predict(msft_pro_mod_day, msft_future_day)
 
 dyplot.prophet(msft_pro_mod_day,msft_preds_day)
 
-plot(msft_pro_mod1,msft_preds)
+
 
 
 
@@ -166,11 +165,11 @@ eval_pro_full <- left_join(eval_pro_full, data_frame(Prediction = "Next Day",
 ### MAPE
 
 # MAPE of all values (stock prices) in the dataset:
-mape_day_f <- mape(msft_x[1:sum(length(msft_x$ds)-1),]$y ,msft_preds_day$yhat)
+mape_day_f <- Metrics::mape(msft_x[1:sum(length(msft_x$ds)-1),]$y ,msft_preds_day$yhat)
 
 # MAPE of the unknown future period we are trying to predict:
 
-mape_day <- mape(msft_x_daily_test$y, 
+mape_day <- Metrics::mape(msft_x_daily_test$y, 
                  msft_preds_day[length(msft_preds_day$ds),]$yhat)
 
 
@@ -280,11 +279,11 @@ mae_mon <- mae(msft_x_monthly_test$y,
 ### MAPE
 
 # MAPE of all values (stock prices) in the dataset:
-mape_mon_f <- mape(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month$yhat)
+mape_mon_f <- Metrics::mape(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month$yhat)
 
 # MAPE of the unknown future period we are trying to predict:
 
-mape_mon <- mape(msft_x_monthly_test$y, 
+mape_mon <- Metrics::mape(msft_x_monthly_test$y, 
     msft_preds_month[sum(length(msft_preds_month$ds)-19):length(msft_preds_month$ds),]$yhat)
 
 
@@ -365,7 +364,7 @@ rmse_mon_2_f<- RMSE(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_2$y
 
 # RMSE of the unknown future period we are trying to predict:
 
-rmse_mon_2 <- RMSE(msft_monthly_test$y, 
+rmse_mon_2 <- RMSE(msft_x_monthly_test$y, 
                 msft_preds_month_2[sum(length(msft_preds_month_2$ds)-19):length(msft_preds_month_2$ds),]$yhat)
 
 
@@ -378,7 +377,7 @@ mse_mon_2_f <- mse(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_2$yh
 
 # MSE of the unknown future period we are trying to predict:
 
-mse_mon_2 <- mse(msft_monthly_test$y, 
+mse_mon_2 <- mse(msft_x_monthly_test$y, 
                msft_preds_month_2[sum(length(msft_preds_month_2$ds)-19):length(msft_preds_month_2$ds),]$yhat)
 
 
@@ -391,18 +390,18 @@ mae_mon_2_f <- mae(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_2$yh
 
 # MAE of the unknown future period we are trying to predict:
 
-mae_mon_2 <- mae(msft_monthly_test$y, 
+mae_mon_2 <- mae(msft_x_monthly_test$y, 
                msft_preds_month_2[sum(length(msft_preds_month_2$ds)-19):length(msft_preds_month_2$ds),]$yhat)
 
 
 ### MAPE
 
 # MAPE of all values (stock prices) in the dataset:
-mape_mon_2_f <- mape(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_2$yhat)
+mape_mon_2_f <- Metrics::mape(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_2$yhat)
 
 # MAPE of the unknown future period we are trying to predict:
 
-mape_mon_2 <- mape(msft_monthly_test$y, 
+mape_mon_2 <- Metrics::mape(msft_x_monthly_test$y, 
                  msft_preds_month_2[sum(length(msft_preds_month_2$ds)-19):length(msft_preds_month_2$ds),]$yhat)
 
 
@@ -507,7 +506,7 @@ rmse_mon_3_f<- RMSE(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_3$y
 
 # RMSE of the unknown future period we are trying to predict:
 
-rmse_mon_3 <- RMSE(msft_monthly_test$y, 
+rmse_mon_3 <- RMSE(msft_x_monthly_test$y, 
                    msft_preds_month_3[sum(length(msft_preds_month_3$ds)-19):length(msft_preds_month_3$ds),]$yhat)
 
 
@@ -520,7 +519,7 @@ mse_mon_3_f <- mse(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_3$yh
 
 # MSE of the unknown future period we are trying to predict:
 
-mse_mon_3 <- mse(msft_monthly_test$y, 
+mse_mon_3 <- mse(msft_x_monthly_test$y, 
                msft_preds_month_3[sum(length(msft_preds_month_3$ds)-19):length(msft_preds_month_3$ds),]$yhat)
 
 ### MAE
@@ -532,18 +531,18 @@ mae_mon_3_f <- mae(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_3$yh
 
 # MAE of the unknown future period we are trying to predict:
 
-mae_mon_3 <- mae(msft_monthly_test$y, 
+mae_mon_3 <- mae(msft_x_monthly_test$y, 
                msft_preds_month_3[sum(length(msft_preds_month_3$ds)-19):length(msft_preds_month_3$ds),]$yhat)
 
 
 ### MAPE
 
 # MAPE of all values (stock prices) in the dataset:
-mape_mon_3_f <- mape(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_3$yhat)
+mape_mon_3_f <- Metrics::mape(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_3$yhat)
 
 # MAPE of the unknown future period we are trying to predict:
 
-mape_mon_3 <- mape(msft_monthly_test$y, 
+mape_mon_3 <- Metrics::mape(msft_x_monthly_test$y, 
                  msft_preds_month_3[sum(length(msft_preds_month_3$ds)-19):length(msft_preds_month_3$ds),]$yhat)
 
 
@@ -582,7 +581,7 @@ macd_preds_month <- predict(macd_pro_mod, msft_future_macd)
 
 ## RMSE
 
-rmse_macd <- RMSE(msft_macd_test$y, 
+rmse_macd <- RMSE(msft_x_macd_test$y, 
                   macd_preds_month[sum(length(macd_preds_month$ds)-19):length(macd_preds_month$ds),]$yhat)
 
 
@@ -645,7 +644,7 @@ rmse_mon_4_f<- RMSE(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_4$y
 
 # RMSE of the unknown future period we are trying to predict:
 
-rmse_mon_4 <- RMSE(msft_monthly_test$y, 
+rmse_mon_4 <- RMSE(msft_x_monthly_test$y, 
                    msft_preds_month_4[sum(length(msft_preds_month_4$ds)-19):length(msft_preds_month_4$ds),]$yhat)
 
 ### MSE
@@ -656,7 +655,7 @@ mse_mon_4_f <- mse(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_4$yh
 
 # MSE of the unknown future period we are trying to predict:
 
-mse_mon_4 <- mse(msft_monthly_test$y, 
+mse_mon_4 <- mse(msft_x_monthly_test$y, 
                  msft_preds_month_4[sum(length(msft_preds_month_4$ds)-19):length(msft_preds_month_4$ds),]$yhat)
 
 ### MAE
@@ -668,18 +667,18 @@ mae_mon_4_f <- mae(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_4$yh
 
 # MAE of the unknown future period we are trying to predict:
 
-mae_mon_4 <- mae(msft_monthly_test$y, 
+mae_mon_4 <- mae(msft_x_monthly_test$y, 
                  msft_preds_month_4[sum(length(msft_preds_month_4$ds)-19):length(msft_preds_month_4$ds),]$yhat)
 
 
 ### MAPE
 
 # MAPE of all values (stock prices) in the dataset:
-mape_mon_4_f <- mape(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_4$yhat)
+mape_mon_4_f <- Metrics::mape(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_4$yhat)
 
 # MAPE of the unknown future period we are trying to predict:
 
-mape_mon_4 <- mape(msft_monthly_test$y, 
+mape_mon_4 <- Metrics::mape(msft_x_monthly_test$y, 
                    msft_preds_month_4[sum(length(msft_preds_month_4$ds)-19):length(msft_preds_month_4$ds),]$yhat)
 
 
@@ -737,7 +736,7 @@ msft_pro_mod_year <- prophet(holidays = NULL,
 
 msft_pro_mod_year <- add_country_holidays(msft_pro_mod_year, 
                                            country_name = 'US')
-msft_pro_mod_year <- fit.prophet(msft_pro_mod_year, msft_yearly_train)
+msft_pro_mod_year <- fit.prophet(msft_pro_mod_year, msft_x_yearly_train)
 
 
 
@@ -815,11 +814,11 @@ mae_yr <- mae(msft_x_yearly_test$y,
 ### MAPE
 
 # MAPE of all values (stock prices) in the dataset:
-mape_yr_f <- mape(msft_x[1:sum(length(msft_x$ds)-260),]$y ,msft_preds_year$yhat)
+mape_yr_f <- Metrics::mape(msft_x[1:sum(length(msft_x$ds)-260),]$y ,msft_preds_year$yhat)
 
 # MAPE of the unknown future period we are trying to predict:
 
-mape_yr <- mape(msft_x_yearly_test$y, 
+mape_yr <- Metrics::mape(msft_x_yearly_test$y, 
                  msft_preds_year[sum(length(msft_preds_year$ds)-259):length(msft_preds_year$ds),]$yhat)
 
 
