@@ -72,16 +72,17 @@ additions. Status will be updated and shown here.
 
 
 
-
-############### Fixes
+##########################
+############# Fixes
 
 ####
 
-- Package conflict of Metrics and forecast
+- Package conflict of Metrics and forecast  (Fixed)
 (accuracy function)
 
 
 
+##########################
 ############# Improvements
 
 
@@ -113,7 +114,10 @@ additions. Status will be updated and shown here.
 
 - cleaner more appropriate spacing
 - better theme for code
-- improve aesthetics  
+- improve aesthetic
+- maybe replace dyplot screenshots
+- Updated rmd rendering script (Done)
+- Name chunks
 
 
 #### Text
@@ -132,7 +136,7 @@ additions. Status will be updated and shown here.
 
 
 
-#####################
+##########################
 ############# Additions
 
 

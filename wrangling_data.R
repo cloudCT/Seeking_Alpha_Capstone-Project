@@ -131,7 +131,7 @@ macd_x <-  msft_x_monthly_train %>% left_join(msft_macd_x) %>%
   select(ds,macd) %>% 
   rename(y = macd)
 
-msft_x_macd_test <- msft_x_monthly_test %>% left_join(msft_macd_x) %>% 
+macd_x_test <- msft_x_monthly_test %>% left_join(msft_macd_x) %>% 
   select(ds,macd) %>% 
   rename(y = macd)
 
@@ -688,7 +688,7 @@ dim(y_train)
 
 fred_int_rate_l <- data.frame(date = seq(min(msft_l$date), 
                                        max(msft_l$date), by = "days")) %>%
-  left_join(fred_int_rat) %>%
+  left_join(fred_int_rate_av) %>%
   fill(value, .direction = "downup") %>% 
   inner_join(msft_l) %>% tibble() %>% rename(int_rate = value) %>% 
   select(int_rate) %>% as.matrix()

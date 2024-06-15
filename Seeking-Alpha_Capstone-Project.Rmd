@@ -1190,6 +1190,7 @@ if(!require(keras)) install.packages("keras")
 
 # To enable parallel computing:
 if(!require(doParallel)) install.package("doParallel")
+
 ```
 
 \
@@ -1218,13 +1219,30 @@ library(widyr)
 library(knitr)
 library(lubridate)
 library(magrittr)
-library(Metrics)
+# library(Metrics)
+library(ModelMetrics)
 library(jsonlite)
 library(reticulate)
-library(quantmod)
 library(httr)
 library(kableExtra)
 # library(doParallel) # If wanted
+
+
+# Stock API:
+library(quantmod)
+library(tidyquant)
+library(alphavantager)
+
+
+# Prophet:
+library(prophet)
+
+# Forecast and tseries (ARIMA):
+library(forecast)
+library(tseries)
+
+# LSTM:
+library(keras)
 
 ```
 
@@ -1277,7 +1295,7 @@ First, the Alpha Vantage package will have to be downloaded if it was not alread
 
 \
 
-```{r setting av key, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, results = "hide", include = T}
+```{r setting av key, eval = F, class.source = "fold-hide", message =F, warning= F, error =F, results = "hide", include = T}
 # Install the API R package and load library:
 
 install.packages("alphavantager")
@@ -1294,6 +1312,9 @@ print(av_api_key())
 
 ```
 
+```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, results = "hide", include = T}
+av_api_key("YBEX2W45GF6IXNJG")
+```
 
 \
 
@@ -1324,7 +1345,7 @@ Utilizing the tidyquant function `tq_get()` we can download the stock market dat
 
 \
 
-```{r quantmod and tidyquant data, eval = F, class.source = "fold-hide", message =F, warning= F, error =F, results = "hide", include = T}
+```{r quantmod and tidyquant data, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, results = "hide", include = T}
 
 getSymbols("MSFT") # creates dataframe with ticker name of class xsx/zoo
 
@@ -1334,6 +1355,11 @@ msft <- tq_get("MSFT",get="stock.prices")
 
 ```
 
+```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, results = "hide",echo =F}
+# So we have the same subset originally used for training:
+
+msft <- msft %>% filter(date <= "2024-02-20") 
+```
 
 \
 
@@ -1406,7 +1432,7 @@ A similar process is needed to download technical indicators through the Alpha V
 \
 
 
-```{r av rsi ,eval = T, class.source = "fold-hide", message =F, warning= F, error =F, results = "hide", include = T }
+```{r av rsi ,eval = F, class.source = "fold-hide", message =F, warning= F, error =F, results = "hide", include = T }
 
 
 # RSI
@@ -1457,7 +1483,7 @@ Ultimately, this method was chosen due to its simplicity and lack of bottle cap 
 
 \
 
-```{r quantmod data msft,eval = F, class.source = "fold-hide", message =F, warning= F, error =F, results = "hide", include = T }
+```{r quantmod data msft,eval = T, class.source = "fold-hide", message =F, warning= F, error =F, results = "hide", include = T }
 
 ### Basic
 
@@ -1570,6 +1596,10 @@ fred_int_rate_av <- av_get(av_fun     = "FEDERAL_FUNDS_RATE",
 
 ```
 
+```{r,eval = T, class.source = "fold-hide", message =F, warning= F, error =F, results = "hide", echo =F}
+fed_proj_rates <- tq_get("FEDTARMD", get = "economic.data",from = "2023-01-01", to  = "2025-12-31")
+```
+
 \
 
 To find a dataset for the “Real US GDP”, multiple sources were checked without success. As the projected GDP could only be found as growth percentage, and Real GDP growth numbers could not be obtained, it was ultimately decided to utilize the potential Real GDP as it includes projections:
@@ -1589,6 +1619,11 @@ fred_rea_gdp_av <- av_get(av_fun     = "REAL_GDP",
 fred_rea_pot_gdp_tq <- tq_get("GDPPOT", get = "economic.data",
                               from = "2014-01-01", to  = "2025-12-31") 
 
+```
+
+```{r,eval = T, class.source = "fold-hide", message =F, warning= F, error =F, results = "hide", echo =F}
+fred_rea_pot_gdp_tq <- tq_get("GDPPOT", get = "economic.data",
+                              from = "2014-01-01", to  = "2025-12-31") 
 ```
 
 \
@@ -2041,7 +2076,7 @@ As Prophet requires its input to be in a specific format, we begin by wrangling 
 
 msft_x <- msft %>% select(date,adjusted) %>% rename(ds = date, y = adjusted)
 
-msft_x
+
 ```
 
 \
@@ -2085,8 +2120,6 @@ msft_x_daily_final_test <- msft_x[length(msft_x$ds),]
 ###### First train/test split "monthly" (next month prediction; 20-trading days 
 #                                                                        period)
 
-
-msft_x %>% arrange(desc(ds)) %>% view()
 
 msft_x_monthly_train <- msft_x[1:sum(length(msft_x$ds)-40),]
 
@@ -2138,7 +2171,7 @@ Before Prophet can be utilized, the necessary package has to be installed, and t
 
 \
 
-```{r , eval = T, class.source = "fold-hide", message =F, warning= F, error =F,echo =T, results = "hide"}
+```{r , eval = F, class.source = "fold-hide", message =F, warning= F, error =F,echo =T, results = "hide"}
 
 install.packages("prophet")
 
@@ -2205,10 +2238,10 @@ After the predictions are obtained, the results can be plotted for analysis and 
 
 \
 
-```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F,echo =T, include =T}
+```{r, eval = F, class.source = "fold-hide", message =F, warning= F, error =F,echo =T, include =T}
 dyplot.prophet(msft_pro_mod,msft_preds)
 ```
-
+![Example of interactive `dyplot` Plot](figs/dyplot_sc_1.png)
 \
 
 It is to be noted that Prophet is not able to discern what constitutes a trading day, by default. Due to that, weekends and holidays must be considered when supplying the future period length to `make_future_dataframe()`. All future days, not exclusively future trading days, must be included when creating a future dataframe.\
@@ -2370,10 +2403,10 @@ msft_preds_month <- predict(msft_pro_mod_month, msft_future_month)
 \
 
 
-```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F,echo =F}
+```{r, eval = F, class.source = "fold-hide", message =F, warning= F, error =F,echo =F}
 dyplot.prophet(msft_pro_mod_month,msft_preds_month)
 ```
-
+![dyplot](figs/dyplot_sc_2.png)
 \
 
 We evaluate the models prediction accuracy on various error metrics, namely the RMSE, MSE, MAE and MAPE and store them for later comparison.
@@ -2423,11 +2456,11 @@ mae_mon <- mae(msft_x_monthly_test$y,
 ### MAPE
 
 # MAPE of all values (stock prices) in the dataset:
-mape_mon_f <- mape(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month$yhat)
+mape_mon_f <- Metrics::mape(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month$yhat)
 
 # MAPE of the unknown future period we are trying to predict:
 
-mape_mon <- mape(msft_x_monthly_test$y, 
+mape_mon <- Metrics::mape(msft_x_monthly_test$y, 
     msft_preds_month[sum(length(msft_preds_month$ds)-19):length(msft_preds_month$ds),]$yhat)
 
 
@@ -2531,7 +2564,7 @@ msft_future_month_2 <- msft_x[1:sum(length(msft_x$ds)-20),] %>%
 
 \
 
-We obtain the model’s predictions as before, after which, we calculate and save the prediction error and plot the results. 
+We obtain the model’s predictions as before, after which, we calculate and save the prediction error. 
 
 \
 
@@ -2541,7 +2574,7 @@ msft_preds_month_2 <- predict(msft_pro_mod_month_2, msft_future_month_2)
 
 ```
 
-```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F,echo =F}
+```{r, eval = F, class.source = "fold-hide", message =F, warning= F, error =F,echo =F}
 dyplot.prophet(msft_pro_mod_month_2,msft_preds_month_2)
 ```
 
@@ -2558,7 +2591,7 @@ rmse_mon_2_f<- RMSE(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_2$y
 
 # RMSE of the unknown future period we are trying to predict:
 
-rmse_mon_2 <- RMSE(msft_monthly_test$y, 
+rmse_mon_2 <- RMSE(msft_x_monthly_test$y, 
                 msft_preds_month_2[sum(length(msft_preds_month_2$ds)-19):length(msft_preds_month_2$ds),]$yhat)
 
 
@@ -2571,7 +2604,7 @@ mse_mon_2_f <- mse(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_2$yh
 
 # MSE of the unknown future period we are trying to predict:
 
-mse_mon_2 <- mse(msft_monthly_test$y, 
+mse_mon_2 <- mse(msft_x_monthly_test$y, 
                msft_preds_month_2[sum(length(msft_preds_month_2$ds)-19):length(msft_preds_month_2$ds),]$yhat)
 
 
@@ -2584,18 +2617,18 @@ mae_mon_2_f <- mae(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_2$yh
 
 # MAE of the unknown future period we are trying to predict:
 
-mae_mon_2 <- mae(msft_monthly_test$y, 
+mae_mon_2 <- mae(msft_x_monthly_test$y, 
                msft_preds_month_2[sum(length(msft_preds_month_2$ds)-19):length(msft_preds_month_2$ds),]$yhat)
 
 
 ### MAPE
 
 # MAPE of all values (stock prices) in the dataset:
-mape_mon_2_f <- mape(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_2$yhat)
+mape_mon_2_f <- Metrics::mape(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_2$yhat)
 
 # MAPE of the unknown future period we are trying to predict:
 
-mape_mon_2 <- mape(msft_monthly_test$y, 
+mape_mon_2 <- Metrics::mape(msft_x_monthly_test$y, 
                  msft_preds_month_2[sum(length(msft_preds_month_2$ds)-19):length(msft_preds_month_2$ds),]$yhat)
 
 
@@ -2725,7 +2758,7 @@ rmse_mon_3_f<- RMSE(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_3$y
 
 # RMSE of the unknown future period we are trying to predict:
 
-rmse_mon_3 <- RMSE(msft_monthly_test$y, 
+rmse_mon_3 <- RMSE(msft_x_monthly_test$y, 
                    msft_preds_month_3[sum(length(msft_preds_month_3$ds)-19):length(msft_preds_month_3$ds),]$yhat)
 
 
@@ -2738,7 +2771,7 @@ mse_mon_3_f <- mse(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_3$yh
 
 # MSE of the unknown future period we are trying to predict:
 
-mse_mon_3 <- mse(msft_monthly_test$y, 
+mse_mon_3 <- mse(msft_x_monthly_test$y, 
                msft_preds_month_3[sum(length(msft_preds_month_3$ds)-19):length(msft_preds_month_3$ds),]$yhat)
 
 ### MAE
@@ -2750,18 +2783,18 @@ mae_mon_3_f <- mae(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_3$yh
 
 # MAE of the unknown future period we are trying to predict:
 
-mae_mon_3 <- mae(msft_monthly_test$y, 
+mae_mon_3 <- mae(msft_x_monthly_test$y, 
                msft_preds_month_3[sum(length(msft_preds_month_3$ds)-19):length(msft_preds_month_3$ds),]$yhat)
 
 
 ### MAPE
 
 # MAPE of all values (stock prices) in the dataset:
-mape_mon_3_f <- mape(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_3$yhat)
+mape_mon_3_f <- Metrics::mape(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_3$yhat)
 
 # MAPE of the unknown future period we are trying to predict:
 
-mape_mon_3 <- mape(msft_monthly_test$y, 
+mape_mon_3 <- Metrics::mape(msft_x_monthly_test$y, 
                  msft_preds_month_3[sum(length(msft_preds_month_3$ds)-19):length(msft_preds_month_3$ds),]$yhat)
 
 ```
@@ -2786,7 +2819,7 @@ macd_x <-  msft_x_monthly_train %>% left_join(msft_macd_x) %>%
   select(ds,macd) %>% 
   rename(y = macd)
 
-msft_macd_test <- msft_x_monthly_test %>% left_join(msft_macd_x) %>% 
+macd_x_test <- msft_x_monthly_test %>% left_join(msft_macd_x) %>% 
   select(ds,macd) %>% 
   rename(y = macd)
 
@@ -2833,7 +2866,7 @@ macd_preds_month <- predict(macd_pro_mod, msft_future_macd)
 
 ## RMSE
 
-rmse_macd <- RMSE(msft_macd_test$y, 
+rmse_macd <- RMSE(macd_x_test$y, 
                   macd_preds_month[sum(length(macd_preds_month$ds)-19):length(macd_preds_month$ds),]$yhat)
 
 
@@ -2902,7 +2935,7 @@ rmse_mon_4_f<- RMSE(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_4$y
 
 # RMSE of the unknown future period we are trying to predict:
 
-rmse_mon_4 <- RMSE(msft_monthly_test$y, 
+rmse_mon_4 <- RMSE(msft_x_monthly_test$y, 
                    msft_preds_month_4[sum(length(msft_preds_month_4$ds)-19):length(msft_preds_month_4$ds),]$yhat)
 
 ### MSE
@@ -2913,7 +2946,7 @@ mse_mon_4_f <- mse(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_4$yh
 
 # MSE of the unknown future period we are trying to predict:
 
-mse_mon_4 <- mse(msft_monthly_test$y, 
+mse_mon_4 <- mse(msft_x_monthly_test$y, 
                  msft_preds_month_4[sum(length(msft_preds_month_4$ds)-19):length(msft_preds_month_4$ds),]$yhat)
 
 ### MAE
@@ -2925,18 +2958,18 @@ mae_mon_4_f <- mae(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_4$yh
 
 # MAE of the unknown future period we are trying to predict:
 
-mae_mon_4 <- mae(msft_monthly_test$y, 
+mae_mon_4 <- mae(msft_x_monthly_test$y, 
                  msft_preds_month_4[sum(length(msft_preds_month_4$ds)-19):length(msft_preds_month_4$ds),]$yhat)
 
 
 ### MAPE
 
 # MAPE of all values (stock prices) in the dataset:
-mape_mon_4_f <- mape(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_4$yhat)
+mape_mon_4_f <- Metrics::mape(msft_x[1:sum(length(msft_x$ds)-20),]$y ,msft_preds_month_4$yhat)
 
 # MAPE of the unknown future period we are trying to predict:
 
-mape_mon_4 <- mape(msft_monthly_test$y, 
+mape_mon_4 <- Metrics::mape(msft_x_monthly_test$y, 
                    msft_preds_month_4[sum(length(msft_preds_month_4$ds)-19):length(msft_preds_month_4$ds),]$yhat)
 
 
@@ -3094,11 +3127,11 @@ eval_pro_full <- left_join(eval_pro_full, data_frame(Prediction = "Next Day",
 ### MAPE
 
 # MAPE of all values (stock prices) in the dataset:
-mape_day_f <- mape(msft_x[1:sum(length(msft_x$ds)-1),]$y ,msft_preds_day$yhat)
+mape_day_f <- Metrics::mape(msft_x[1:sum(length(msft_x$ds)-1),]$y ,msft_preds_day$yhat)
 
 # MAPE of the unknown future period we are trying to predict:
 
-mape_day <- mape(msft_x_daily_test$y, 
+mape_day <- Metrics::mape(msft_x_daily_test$y, 
                  msft_preds_day[length(msft_preds_day$ds),]$yhat)
 
 
@@ -3157,7 +3190,7 @@ msft_pro_mod_year <- prophet(holidays = NULL,
 
 msft_pro_mod_year <- add_country_holidays(msft_pro_mod_year, 
                                            country_name = 'US')
-msft_pro_mod_year <- fit.prophet(msft_pro_mod_year, msft_yearly_train)
+msft_pro_mod_year <- fit.prophet(msft_pro_mod_year, msft_x_yearly_train)
 
 ```
 
@@ -3185,10 +3218,10 @@ msft_preds_year <- predict(msft_pro_mod_year, msft_future_year)
 
 Out of the forecast horizons described, the one year forecast horizon naturally provides the most visually interesting and informative results when plotted.
 
-```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F,echo =F}
+```{r, eval = F, class.source = "fold-hide", message =F, warning= F, error =F,echo =F}
 dyplot.prophet(msft_pro_mod_year,msft_preds_year)
 ```
-
+![dyplot](figs/dyplot_sc_3.png)
 \
 
 As we can see in the above plot, the confidence interval, represented by the muted blue area around the final prediction line, increases exponentially with time. This is to be expected as the predictive value of available data decreases, the further the prediction lies in the future. 
@@ -3254,11 +3287,11 @@ mae_yr <- mae(msft_x_yearly_test$y,
 ### MAPE
 
 # MAPE of all values (stock prices) in the dataset:
-mape_yr_f <- mape(msft_x[1:sum(length(msft_x$ds)-260),]$y ,msft_preds_year$yhat)
+mape_yr_f <- Metrics::mape(msft_x[1:sum(length(msft_x$ds)-260),]$y ,msft_preds_year$yhat)
 
 # MAPE of the unknown future period we are trying to predict:
 
-mape_yr <- mape(msft_x_yearly_test$y, 
+mape_yr <- Metrics::mape(msft_x_yearly_test$y, 
                  msft_preds_year[sum(length(msft_preds_year$ds)-259):length(msft_preds_year$ds),]$yhat)
 
 
@@ -5771,7 +5804,7 @@ steps_out <- 20
 
 fred_int_rate_l <- data.frame(date = seq(min(msft_l$date), 
                                        max(msft_l$date), by = "days")) %>%
-  left_join(fred_int_rat) %>%
+  left_join(fred_int_rate_av) %>%
   fill(value, .direction = "downup") %>% 
   inner_join(msft_l) %>% tibble() %>% rename(int_rate = value) %>% 
   select(int_rate) %>% as.matrix()
@@ -6569,13 +6602,18 @@ Throughout this section, the LSTM modeling process will be described, utilizing 
 
 \
 
-```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo = T, results="hide"}
+```{r, eval = F, class.source = "fold-hide", message =F, warning= F, error =F, echo = T, results="hide"}
 # Installing Keras (Tensorflow backend)
 library(keras)
 install_keras()
 #install_tensorflow()
 library(tensorflow)
 
+```
+
+```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo = F, results="hide"}
+library(keras)
+library(tensorflow)
 ```
 
 \
@@ -7889,6 +7927,8 @@ As formerly stated, we will input previously wrangled data that was sequenced ut
 ########
 ##### Encoder-Decoder Model
 
+steps_in <- 15
+steps_out <- 1
 
 tensorflow::set_random_seed(936)
 # Define the LSTM model using Keras
@@ -7980,7 +8020,8 @@ As is reflected by the sequenced input data, the model will primarily utilize th
 ######## CNN-LSTM Next Year Prediction
 ########################
 
-
+steps_in <- 520
+steps_out <- 260
 
 tensorflow::set_random_seed(936)
 # Define the LSTM model using Keras

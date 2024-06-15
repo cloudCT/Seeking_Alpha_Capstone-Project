@@ -581,7 +581,7 @@ macd_preds_month <- predict(macd_pro_mod, msft_future_macd)
 
 ## RMSE
 
-rmse_macd <- RMSE(msft_x_macd_test$y, 
+rmse_macd <- RMSE(macd_x_test$y, 
                   macd_preds_month[sum(length(macd_preds_month$ds)-19):length(macd_preds_month$ds),]$yhat)
 
 
