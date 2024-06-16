@@ -246,6 +246,7 @@ leftover either added or stored
 
 
 - maybe sharpe ratio as eval next to price dif
+- maybe the additional of "stable" prediction aside from up/down
 
 
 

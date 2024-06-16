@@ -17,15 +17,15 @@ head(msft)
 
 # Highest Open
 msft %>% select(-symbol) %>% filter(open == max(open)) %>% 
-  summarize(date,highest_open = open)
+  summarize(date,highest_open = open) %>% kable() 
 
 # Highest Adjusted Close
 msft %>% select(-symbol) %>% filter(adjusted == max(adjusted)) %>% 
-  summarize(date,highest_adjusted = adjusted)
+  summarize(date,highest_adjusted = adjusted) %>% kable() 
 
 # Highest Close
 msft %>% select(-symbol) %>% filter(close == max(close)) %>% 
-  summarize(date,highest_close = close)
+  summarize(date,highest_close = close) %>% kable() 
 
 # or
 msft[which.max(msft$open),]
@@ -39,15 +39,15 @@ msft[which.max(msft$close),]
 
 # Lowest Open
 msft %>% select(-symbol) %>% filter(open == min(open)) %>%
-  summarize(date,lowest_open = open)
+  summarize(date,lowest_open = open) %>% kable() 
 
 # Lowest Adjusted Close
 msft %>% select(-symbol) %>% filter(adjusted == min(adjusted)) %>% 
-  summarize(date,lowest_adjusted = adjusted)
+  summarize(date,lowest_adjusted = adjusted) %>% kable() 
 
 # Lowest Close
 msft %>% select(-symbol) %>%filter(close == min(close)) %>% 
-  summarize(date,lowest_close =close)
+  summarize(date,lowest_close =close)%>% kable() 
 
 # or
 msft[which.min(msft$open),]
@@ -61,7 +61,7 @@ msft[which.min(msft$close),]
 
 msft %>% select(-symbol) %>% summarize(avg_open = mean(open),
                                        avg_adjusted = mean(adjusted),
-                                       avg_close = mean(close)) 
+                                       avg_close = mean(close)) %>% kable() 
 
 
 
@@ -73,7 +73,7 @@ msft %>% select(-symbol) %>% summarize(avg_open = mean(open),
 msft %>% reframe(lag = diff(open)) %>% summarize(open_lag_avg = mean(lag),
                                                   open_lag_high = max(lag),
                                                   open_lag_low = min(lag),
-                                                 sd = sd(lag))
+                                                 sd = sd(lag)) %>% kable() 
 
 
 # Adjusted Close
@@ -81,14 +81,14 @@ msft %>% reframe(lag = diff(open)) %>% summarize(open_lag_avg = mean(lag),
 msft %>% reframe(lag = diff(adjusted)) %>% summarize(adj_lag_avg = mean(lag),
                                                   adj_lag_high = max(lag),
                                                   adj_lag_low = min(lag),
-                                                  sd = sd(lag))
+                                                  sd = sd(lag)) %>% kable() 
 
 
 # Close
 msft %>% reframe(lag = diff(close)) %>% summarize(close_lag_avg = mean(lag),
                                                     close_lag_high = max(lag),
                                                     close_lag_low = min(lag),
-                                                  sd = sd(lag))
+                                                  sd = sd(lag))%>% kable() 
 
 
 # Up-Down split
@@ -100,7 +100,7 @@ msft %>% reframe(adj = diff(adjusted)) %>%
                                                         TRUE ~ "No change")) %>%
   summarize(up = mean(direction == "Up"),
             down = mean(direction == "Down"),
-            same = mean(direction == "No change"))
+            same = mean(direction == "No change")) %>% kable() 
 
 
 
@@ -108,7 +108,7 @@ msft %>% reframe(adj = diff(adjusted)) %>%
 
 msft %>% group_by(date) %>% mutate(diff = open - close) %>% ungroup() %>% 
   select(date,diff) %>% 
-  summarize(intraday_difference = mean(diff), sd = sd(diff))
+  summarize(intraday_difference = mean(diff), sd = sd(diff)) %>% kable() 
 
 
 
@@ -121,7 +121,8 @@ msft %>% mutate(weekday = weekdays(as.Date(date))) %>% group_by(weekday) %>%
             avg_open = mean(open),
             avg_adj = mean(adjusted),
             avg_vol = mean(volume)) %>% 
-  arrange(match(weekday, c("Monday","Tuesday","Wednesday","Thursday","Friday")))
+  arrange(match(weekday, c("Monday","Tuesday","Wednesday","Thursday","Friday"))) %>% 
+  kable() 
 
 
 
@@ -131,7 +132,7 @@ msft %>% mutate(weekday = weekdays(as.Date(date))) %>% group_by(weekday) %>%
 
 msft %>% filter(date >= "2018-1-1") %>% mutate(date = year(date)) %>% 
   group_by(date) %>% select(-symbol) %>% summarize_all(mean) %>% 
-  mutate(date = str_replace(date,"2019","First Covid year"))
+  mutate(date = str_replace(date,"2019","First Covid year")) %>% kable()
 
 
 
@@ -220,7 +221,6 @@ chartSeries(MSFT,
 
 
 
-
 # Day-to-day differences and log returns
 
 msft %>% reframe(open = diff(open),
@@ -229,7 +229,15 @@ msft %>% reframe(open = diff(open),
   mutate(day = 2:sum(nrow(msft))) %>% 
   pivot_longer(cols =c(open,adj,close),names_to = "name", values_to = "price") %>% 
   ggplot(aes(day,price, color = name)) +
-  geom_line()
+  ggtitle("Day-to-day Differences in Price")+
+  xlab(NULL)+
+  ylab("Price Difference") +
+  theme_minimal()+
+  geom_line()+
+  labs(color ="Price")+
+  theme( plot.title = element_text(size = (10)),
+         panel.background = element_rect(fill = "antiquewhite1"),
+         axis.text.x = element_blank()) 
 
 
 
@@ -240,14 +248,14 @@ msft %>% reframe(open = 100*diff(log(open)),
   pivot_longer(cols =c(open,adj,close),names_to = "name", values_to = "price") %>% 
   ggplot(aes(day,price, color = name)) +
   geom_line()+
- # scale_color_manual(values =c("red","cornflowerblue","darkorange"))+
+  #scale_color_manual(values =c("red","cornflowerblue","darkorange"))+
   xlab(NULL)+
   ylab("Log Adjusted Price Difference") +
   theme_minimal()+
-  ggtitle("Day-to-day Differences in Price")+
+  ggtitle("Daily Log Adjusted Returns")+
   labs(color ="Price")+
   theme( plot.title = element_text(size = (10)),
-         panel.background = element_rect(fill = "cornsilk"),
+         panel.background = element_rect(fill = "antiquewhite1"),
          axis.text.x = element_blank()) 
   
 
