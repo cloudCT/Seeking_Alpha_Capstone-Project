@@ -34,11 +34,11 @@ output:
 toc-title: "Table of Contents"
 header-includes:
    - \usepackage{xcolor}
-   # - \definecolor{beige}{HTML}{FFF0DB}
+   #- \definecolor{beige}{HTML}{FFF0DB}
    - \definecolor{beige}{HTML}{EED9C4}
    - \pagecolor{beige}
-   # - \usepackage{fontspec}
-   # - \setmainfont{Times New Roman}
+   #- \usepackage{fontspec}
+   #- \setmainfont{Times New Roman}
 ---
 
 ```{r setup, include=FALSE}
@@ -222,6 +222,7 @@ As previously stated, the task of predicting the stock market might not necessar
 The focal point of this analysis will be the natural choice of predicting a stocks price after a given period, and over a given forecast horizon. While this approach might seem straightforward, there are in fact many ways the price of a stock can be represented, depending on the information it aims to convey. Each used for a specific purpose and relaying information important to unique use cases.\
 An example for price quantifications that are particularly case specific are intraday data. Intraday data describes the price in a short time frame throughout any given trading day, such as in a 15 or 30 minute window, usually averaging the price in the given period or representing its last value. It is utilized by active day-traders or “scalpers” interested in the short term price movement of a stock oftentimes without the aim of holding the stock past the market close.
 \
+\newpage
 
 Excluding examples such as these, the list provided below focuses solely on the most commonly seen methods to evaluate a securities value.
 \
@@ -257,6 +258,7 @@ Due to these reasons, the choice was made to focus on the Adjusted Close Price t
 
 \
 \
+\newpage
 
 **$\text{\underline{Format:}}$**
 
@@ -378,6 +380,7 @@ Basic features:
 
 - Adjusted Close
 - Volume
+\newpage
 
 Fundamental Indicators:
 
@@ -468,6 +471,7 @@ Average Loss: \
 - Same as average gain with the difference that we observe how many days a stock   moved down during the period
 \
 
+\newpage
 
 Evaluation:
 
@@ -630,6 +634,7 @@ $Max$ = Highest value of the three terms \
 
 
 \
+\newpage
 
 Evaluation:
 
@@ -719,7 +724,8 @@ On-Balance Volume is a momentum indicator that uses volume flow to predict chang
 
 OBV was designed upon the belief that volume is the key force behind the market and that major market moves can be projected based on volume changes. The assumption is that when volume increases sharply without a significant change in the stock’s price, the price will eventually jump upward or fall downward. OBV thus aims to infer crowd sentiment to predict future market trends.
 
-\
+\newpage
+
 Calculation:
 
 \
@@ -1046,7 +1052,6 @@ Since LSTM networks are capable of handling and remembering long sequences of da
 \newpage
 
 The general structure of an LSTM network is shown in this figure:
-
 \
 
 ![LSTM Cell structure](figs/lstm_cell.png)
@@ -1069,7 +1074,7 @@ It is mathematically represented by this equation:
 
 $$f_t = \sigma (W_{f}*[h_{t-1}, x_t]+b_f)$$
 
-\
+\newpage
 \
 
 $\text{\underline{Input Gate:}}$
@@ -1118,10 +1123,7 @@ However, a clear distinction between the two is that GRU networks only utilize t
 
 \
 
-\newpage
-
 The structure of a GRU network can be seen here:
-
 \
 
 ![GRU Cell structure](figs/gru_cell.png)
@@ -1133,13 +1135,13 @@ Mathematically the two gates that GRU utilizes can be represented as such:
 
 \
 - Update gate:
-
 \
+
 $$Z[t] = \sigma (W^{z}x_t + U^{z}h_{t-1}) $$
 \
 - Reset gate:
-
 \
+
 $$r[t] = \sigma (W^{r}x_t + U^{r}h_{t-1}) $$
 \
 
@@ -1155,7 +1157,6 @@ To summarize, GRUs are a simplified version of LSTMs that use a single update ga
 Convolutional Neural Networks, also known as ConvNets or CNNs, are a type of neural network that specializes in processing data in a grid like topology, such as an image. It is thus most commonly in computer vision in various image classification tasks. 
 
 A typical CNN has three types of layers; a convolutional layer, a pooling layer, and a fully connected layer.
-
 \
 
 ![CNN structure](figs/cnn_structure.png)
@@ -1168,8 +1169,9 @@ Without detailing the computational process of the model, CNNs may be used to re
 
 In stock market analysis, these networks can be utilized to extract the most useful features and can be combined with other models such as recurrent neural networks in various different ways. 
 
-
 \
+\newpage
+
 
 **$\text{\underline{Echo State Network (ESN)}}$**
 
@@ -1198,7 +1200,7 @@ A random forest algorithm begins by randomly picking a set number of N data poin
 A major downside of random forests is, that while they can perform well on large datasets, the increase in tree size slows down the computation substantially. While this characteristic does not make them ideal for the task of stock prediction, which often includes large sets of data, some analyses reported good results on bidirectional models, predicting up or down movements of stocks.
 
 \
-
+\newpage
 
 The process of random forest is visually shown here:
 \
@@ -1218,13 +1220,13 @@ XG-Boost stands for Extreme Gradient Boosting and is a popular prediction model 
 Gradient boosting is an extension of that where the process of additively generating weak models is formalized as a gradient descent algorithm over an objective function. Additionally, targeted outcomes for the next model are set in an effort to minimize errors, which for each case, are based on the gradient of each error. While decision trees in random forest are built sequentially, here, they are built in parallel. The model follows a level-wise strategy, scanning across gradient values and using these partial sums to evaluate the quality of splits at every possible split in the training set.
 
 \
-The process of XG-Boost is depicted here:
+\newpage
 
+The process of XG-Boost is depicted here:
 \
 
 ![XG-Boost Visualization](figs/xg_boost.png)
 
-\pagebreak
 
 \
 \
@@ -1823,22 +1825,22 @@ On the first look it is immediately noticeable how all values are on a similar r
 As our our data is cleaned up and stored in a tibble, we can begin to conduct some preliminary data exploration to find significant points of interest. Our data being stored in a tibble, greatly simplifies this process.
 \
 
-```{r , eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo = T, results ="hold"}
+```{r , eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo = T, results ="hide"}
 
 
 ## Highest Price
 
 # Highest Open
 msft %>% select(-symbol) %>% filter(open == max(open)) %>% 
-  summarize(date,highest_open = open) %>% kable()
+  summarize(date,"Highest Open" = open) %>% kable()
 
 # Highest Adjusted Close
 msft %>% select(-symbol) %>% filter(adjusted == max(adjusted)) %>% 
-  summarize(date,highest_adjusted = adjusted) %>% kable()
+  summarize(date,"Highest Adjusted" = adjusted) %>% kable()
 
 # Highest Close
 msft %>% select(-symbol) %>% filter(close == max(close)) %>% 
-  summarize(date,highest_close = close) %>% kable()
+  summarize(date,"Highest Close" = close) %>% kable()
 
 # # or
 # msft[which.max(msft$open),]
@@ -1851,15 +1853,15 @@ msft %>% select(-symbol) %>% filter(close == max(close)) %>%
 
 # Lowest Open
 msft %>% select(-symbol) %>% filter(open == min(open)) %>%
-  summarize(date,lowest_open = open) %>% kable()
+  summarize(date,"Lowest Open" = open) %>% kable()
 
 # Lowest Adjusted Close
 msft %>% select(-symbol) %>% filter(adjusted == min(adjusted)) %>% 
-  summarize(date,lowest_adjusted = adjusted) %>% kable()
+  summarize(date,"Lowest Adjusted" = adjusted) %>% kable()
 
 # Lowest Close
 msft %>% select(-symbol) %>%filter(close == min(close)) %>% 
-  summarize(date,lowest_close =close) %>% kable()
+  summarize(date,"Lowest Close" = close) %>% kable()
 
 # # or
 # msft[which.min(msft$open),]
@@ -1868,9 +1870,68 @@ msft %>% select(-symbol) %>%filter(close == min(close)) %>%
 
 ```
 
+```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo = F, results ="hold"}
+options(digits=5)
+h_o <- msft %>% select(-symbol) %>% filter(open == max(open)) %>% 
+  summarize("Date"= date,"Highest Open" = open) %>% kable(booktabs = T)%>% kable_styling(latex_options = "HOLD_position")
+
+h_a <- msft %>% select(-symbol) %>% filter(adjusted == max(adjusted)) %>% 
+  summarize("Date"= date,"Highest Adjusted" = adjusted) %>% kable(booktabs = T)%>% kable_styling(latex_options = "HOLD_position")
+
+h_c <- msft %>% select(-symbol) %>% filter(close == max(close)) %>% 
+  summarize("Date"= date,"Highest Close" = close) %>% kable(booktabs = T)%>% kable_styling(latex_options = "HOLD_position")
+
+options(digits=4)
+l_o <- msft %>% select(-symbol) %>% filter(open == min(open)) %>%
+  summarize("Date"= date,"Lowest Open" = open) %>% kable(booktabs = T)%>% kable_styling(latex_options = "HOLD_position")
+
+l_a <- msft %>% select(-symbol) %>% filter(adjusted == min(adjusted)) %>% 
+  summarize("Date"= date,"Lowest Adjusted" = adjusted) %>% kable(booktabs = T)%>% kable_styling(latex_options = "HOLD_position")
+
+l_c <- msft %>% select(-symbol) %>%filter(close == min(close)) %>% 
+  summarize("Date"= date,"Lowest Close" = close) %>% kable(booktabs = T)%>% kable_styling(latex_options = "HOLD_position")
+
+aligned_high_prices <- paste0("
+\\begin{minipage}[t]{0.32\\textwidth}
+", h_o, "
+\\end{minipage}
+\\hfill
+\\begin{minipage}[t]{0.32\\textwidth}
+", h_a, "
+\\end{minipage}
+\\hfill
+\\begin{minipage}[t]{0.32\\textwidth}
+", h_c, "
+\\end{minipage}
+")
+
+knitr::asis_output(aligned_high_prices)
+```
 \
 
-When we look at the highest and lowest price points found in the data, we first notice that both extremes for the adjusted close and the close are to not much surprise found on the same day. The extremes for the open price, on the other hand, are found a few days after for the highest value and on the next day for the lowest value, so generally all extremes are found around the same time frame. \
+```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo = F, results ="hold"}
+
+aligned_low_prices <- paste0("
+\\begin{minipage}[t]{0.32\\textwidth}
+", l_o, "
+\\end{minipage}
+\\hfill
+\\begin{minipage}[t]{0.32\\textwidth}
+", l_a, "
+\\end{minipage}
+\\hfill
+\\begin{minipage}[t]{0.32\\textwidth}
+", l_c, "
+\\end{minipage}
+")
+
+knitr::asis_output(aligned_low_prices)
+
+```
+
+\
+
+When we look at the highest and lowest price points found in the data, we first notice that both extremes for the adjusted close and the close are, to not much surprise, found on the same day. The extremes for the open price, on the other hand, are found a few days after for the highest value and on the next day for the lowest value, so generally all extremes are found around the same time frame. \
 Most notably, we can observe that the lowest price values can be found close to the earliest available dates for which data is present, while the highest values are close to the most recent dates available. At the same time, we see a stark difference between the two extremes. This implies a general uptrend in the stock price throughout time. Given the difference, a fairly steep continuous uptrend can be assumed.
 
 \
@@ -1880,11 +1941,12 @@ Below we see the average prices for the security:
 
 ```{r avg, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F}
 
+options(digits= 5)
 ## Average prices
 
-msft %>% select(-symbol) %>% summarize(avg_open = mean(open),
-                                       avg_adjusted = mean(adjusted),
-                                       avg_close = mean(close)) %>% kable()
+msft %>% select(-symbol) %>% summarize("Average Open Price" = mean(open),
+                                       "Average Adjusted Price" = mean(adjusted),
+                                       "Average Close Price" = mean(close)) %>% kable()
 
 ```
 
@@ -1898,28 +1960,29 @@ To gain a better understanding of the variance found in the data, we look at the
 \
 
 ```{r dif, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F }
+options(digits= 5)
 ## Day to day differences in price
 
 # Open
 
-msft %>% reframe(lag = diff(open)) %>% summarize(open_lag_avg = mean(lag),
-                                                  open_lag_high = max(lag),
-                                                  open_lag_low = min(lag),
+msft %>% reframe(lag = diff(open)) %>% summarize("Average Open Lag" = mean(lag),
+                                                 "Highest Open Lag" = max(lag),
+                                                  "Lowest Open Lag" = min(lag),
                                                  sd = sd(lag)) %>% kable()
 
 
 # Adjusted Close
 
-msft %>% reframe(lag = diff(adjusted)) %>% summarize(adj_lag_avg = mean(lag),
-                                                  adj_lag_high = max(lag),
-                                                  adj_lag_low = min(lag),
+msft %>% reframe(lag = diff(adjusted)) %>% summarize("Average Adj Close Lag" = mean(lag),
+                                                  "Highest Adj Close Lag" = max(lag),
+                                                  "Lowest Adj Close Lag" = min(lag),
                                                   sd = sd(lag)) %>% kable()
 
 
 # Close
-msft %>% reframe(lag = diff(close)) %>% summarize(close_lag_avg = mean(lag),
-                                                    close_lag_high = max(lag),
-                                                    close_lag_low = min(lag),
+msft %>% reframe(lag = diff(close)) %>% summarize("Average Close Lag" = mean(lag),
+                                                    "Highest Close Lag" = max(lag),
+                                                    "Lowest Close Lag" = min(lag),
                                                   sd = sd(lag)) %>% kable()
 
 ```
@@ -1938,9 +2001,9 @@ msft %>% reframe(adj = diff(adjusted)) %>%
   mutate(day = 2:sum(nrow(msft)), direction = case_when(adj > 0 ~ "Up",
                                                         adj < 0 ~ "Down",
                                                         TRUE ~ "No change")) %>%
-  summarize(up = mean(direction == "Up"),
-            down = mean(direction == "Down"),
-            same = mean(direction == "No change")) %>% kable()
+  summarize("Up" = mean(direction == "Up"),
+            "Down" = mean(direction == "Down"),
+            "No change" = mean(direction == "No change")) %>% kable()
 
 
 ```
@@ -1956,7 +2019,7 @@ When we observe the intraday difference we see that on average, the stock closes
 
 msft %>% group_by(date) %>% mutate(diff = open - close) %>% ungroup() %>% 
   select(date,diff) %>% 
-  summarize(intraday_difference = mean(diff), sd = sd(diff)) %>% kable()
+  summarize("intraday difference" = mean(diff), sd = sd(diff)) %>% kable()
 
 ```
 
@@ -1970,12 +2033,12 @@ As most stock exchanges, including the NASDAQ in which we find the Microsoft sto
 ## Average price on each trading day
 
 
-msft %>% mutate(weekday = weekdays(as.Date(date))) %>% group_by(weekday) %>% 
-  summarize(avg_close = mean(close),
-            avg_open = mean(open),
-            avg_adj = mean(adjusted),
-            avg_vol = mean(volume)) %>% 
-  arrange(match(weekday, c("Monday","Tuesday","Wednesday","Thursday","Friday"))) %>% kable()
+msft %>% mutate(Weekday = weekdays(as.Date(date))) %>% group_by(Weekday) %>% 
+  summarize("avg close" = mean(close),
+            "avg open" = mean(open),
+            "avg adjusted" = mean(adjusted),
+            "avg volume" = mean(volume)) %>% 
+  arrange(match(Weekday, c("Monday","Tuesday","Wednesday","Thursday","Friday"))) %>% kable()
 
 ```
 
@@ -1991,10 +2054,11 @@ Financial markets were strongly affected by the Covid pandemic. As we can see he
 
 ```{r covid eval,eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F }
 ## Covid
-
+options(digits =7)
 msft %>% filter(date >= "2018-1-1") %>% mutate(date = year(date)) %>% 
   group_by(date) %>% select(-symbol) %>% summarize_all(mean) %>% 
-  mutate(date = str_replace(date,"2019","First Covid year")) %>% kable()
+  mutate(date = str_replace(date,"2019","First Covid year")) %>% 
+  rename("Date"=date) %>% kable()
 
 ```
 
@@ -2014,7 +2078,7 @@ A similarity all these charts share, is the price scale being represented by the
 Line charts usually only show the close price of a stock. While not as common, the open, high or close could also be chosen to be represented in isolation instead. Traders utilize this form of chart when one price is considered to be more important than the others. For instance, traders might choose to only pay attention to the close price, so that intraday swing can be ignored. 
 \
 
-```{r line chart,eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F }
+```{r line chart,eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F, out.width = "75%",fig.align="center"}
 
 chartSeries(MSFT,
             subset = "last 11 years",
@@ -2025,11 +2089,11 @@ chartSeries(MSFT,
 ```
 
 \
-\
+\newpage
 Perhaps the most popular chart are bar charts. Here, the high, low and close price are shown simultaneously for each period. 
 \
 
-```{r bar chart,eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F }
+```{r bar chart,eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F,out.width = "75%",fig.align="center"}
 chartSeries(MSFT,
             subset = "last 1 year",
             type = "bar",
@@ -2044,7 +2108,7 @@ chartSeries(MSFT,
 Candlestick charts represent the high, low, open and close of a stock and are visually reminiscent of error-bar plots. The rectangular portion of a candlestick, called the body, represents the opening and closing price of the stock, while the lines above and below, called shadows, stand for the highest and lowest price of the underlying stock in the respective trading period.
 \
 
-```{r candlestick chart, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F}
+```{r candlestick chart, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F, out.width = "75%",fig.align="center"}
 # Candlestick Chart
 
 chartSeries(MSFT,
@@ -2061,7 +2125,7 @@ chartSeries(MSFT,
 As mentioned, traders usually overlay their charts with various different technical indicators that help them visualize trading signals. A popular visual tool, for example, are Bollinger Bands as they help gauge a securities volatility and can be used to determine if a stock is under- or overvalued. 
 \
 
-```{r bb bands, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F}
+```{r bb bands, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F,out.width="85%",fig.align="center"}
 # Bollinger Bands
 
 
@@ -2069,9 +2133,8 @@ As mentioned, traders usually overlay their charts with various different techni
 chartSeries(MSFT,
             subset = "last 1 year",
             type = "line",
-            TA = NULL,
+            TA = c(addBBands()),
             name = "Bollinger Bands")
-addBBands()
 ```
 
 \
@@ -2079,11 +2142,11 @@ addBBands()
 The center line represents the simple moving average of a specified period, usually the 20-day SMA, while the upper and lower bounds are the standard deviation, usually set to 2. 
 
 \
-
+\newpage
 Other technical indicators are often represented underneath the primary chart in a smaller rectangular chart. Oftentimes, traders utilize multiple technical indicators in combination.
 \
 
-```{r multi chart, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F }
+```{r multi chart, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F,out.width="85%",fig.align="center" }
 # MACD underlayed
 
 chartSeries(MSFT,
@@ -2100,7 +2163,7 @@ chartSeries(MSFT,
 We will refrain from utilizing advanced visual tools to analyze the data as it would go beyond the scope of this project. Instead, we return to the graphical representation of the Microsoft stock as a line chart from 2014 to today, without any overlayed indicators.
 \
 
-```{r msft, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F}
+```{r msft, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F,out.width="85%",fig.align="center"}
 
 chartSeries(MSFT,
             subset = "last 11 years",
@@ -2117,7 +2180,7 @@ While the Covid years did not significantly affect the share value, a noticeable
 For comparison, the same observations can be made on Alphabets and Apple stocks, while the latter was affected to a smaller extent.
 \
 
-```{r google chart,eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F,results="hide" }
+```{r google chart,eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F,results="hide",out.width="50%"}
 
 
 
@@ -2128,18 +2191,15 @@ chartSeries(GOOG,
             TA = NULL,
             name = " Microsoft Line Chart")
 
-```
-
-\
-
-```{r aapl chart,eval = T, class.source = "fold-hide", message =F, warning= F, error =F, include = T, echo =F,results ="hide"}
 getSymbols("AAPL")
 chartSeries(AAPL,
             subset = "last 11 years",
             type = "line",
             TA = NULL,
             name = " Microsoft Line Chart")
+
 ```
+
 
 \
 \
@@ -2449,7 +2509,6 @@ This hyper-parameter defaults to 0.05 and should be kept between the range of 0.
 **Seasonality:**
 
 Seasonality refers to changes in the time series that repeat themselves based on a particular calendar time. It is additive by default.
-
 \
 
 _yearly_seasonality / weekly_seasonality / daily_seasonality:_ All boolean and default to TRUE. Determines whether or not each particular seasonality should be turned on or off.
@@ -2459,8 +2518,6 @@ _seasonality_mode:_ Additive or multiplicative. If the magnitude of seasonal flu
 \
 
 **Other:**
-
-Other:
 
 - _holidays:_ Passes a dataframe containing specified holidays \
 - _holiday_prior_scale:_ Modulates the strength of the holiday components \
@@ -2536,7 +2593,6 @@ To run the model and to obtain our predictions we utilize the common `predict()`
 
 msft_preds_month <- predict(msft_pro_mod_month, msft_future_month)
 ```
-
 \
 
 ```{r, eval = F, class.source = "fold-hide", message =F, warning= F, error =F,echo =F}
@@ -3335,7 +3391,7 @@ msft_preds_year <- predict(msft_pro_mod_year, msft_future_year)
 
 ```
 
-\
+\newpage
 
 Out of the forecast horizons described, the one year forecast horizon naturally provides the most visually interesting and informative results when plotted.
 \
@@ -3348,6 +3404,7 @@ dyplot.prophet(msft_pro_mod_year,msft_preds_year)
 
 As we can see in the above plot, the confidence interval, represented by the muted blue area around the final prediction line, increases exponentially with time. This is to be expected as the predictive value of available data decreases, the further the prediction lies in the future. 
 
+\newpage
 To evaluate the prediction accuracy of the model, we can plot the actual values of the adjusted close price next to the predictions.
 \
 
@@ -3444,8 +3501,8 @@ We can see this equally represented in the model’s RMSE of `r rmse_yr`.
 
 
 \
-\
 \newpage
+
 
 ## Model Evaluation
 \
@@ -3462,7 +3519,7 @@ library(kableExtra)
 
 options(digits = 5)
 eval_pro_full %>% 
-  kbl(caption = "Prediction Results for Forecast Horizon") %>% 
+  kbl(caption = "Prediction Accuracy on Past Train-Set Values") %>% 
   kable_material_dark(full_width = F) %>% 
   column_spec(2, color = "white", 
               background = spec_color(eval_pro$RMSE[1:3], end = 0.7,
@@ -3475,10 +3532,10 @@ eval_pro_full %>%
                                       direction = -1,option="E")) %>% 
   column_spec(5, color = "white", 
               background = spec_color(eval_pro$MAE[1:3], end = 0.7,
-                                      direction = -1,option="E"))
+                                      direction = -1,option="E")) %>% 
+  kable_styling(latex_options = "hold_position")
 
 ```
-
 \
 
 The small variations can be mostly attributed to the variable length of historical data available to each model. This observations is expected as all models were very similarly built.
@@ -3487,15 +3544,13 @@ The small variations can be mostly attributed to the variable length of historic
 The results on their respective forecast horizons, on the other hand, shows major differences:
 \
 
-```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F,echo =F}
+```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F,echo =F,results="hold"}
 library(knitr)
 library(kableExtra)
 
-
-
 options(digits = 5)
-eval_pro_full %>% 
-  kbl(caption = "Prediction Results for Forecast Horizon") %>% 
+eval_pro %>% 
+  kbl(caption = "Prediction Accuracy on Future Forecast Horizons") %>% 
   kable_material_dark(full_width = F) %>% 
   column_spec(2, color = "white", 
               background = spec_color(eval_pro$RMSE[1:3], end = 0.7,
@@ -3508,10 +3563,10 @@ eval_pro_full %>%
                                       direction = -1,option="E")) %>% 
   column_spec(5, color = "white", 
               background = spec_color(eval_pro$MAE[1:3], end = 0.7,
-                                      direction = -1,option="E"))
+                                      direction = -1,option="E"))%>% 
+  kable_styling(latex_options = "hold_position")
 
 ```
-
 \
 
 We see that Prophet shows decreased prediction accuracy with increased forecast horizon. This trend can be observed on all four measured error metrics. \
@@ -3524,10 +3579,7 @@ It is, on the other hand, fairly easy to implement while being computationally e
 
 Prophet is, at the very least, a good baseline tool for stock market prediction tasks. In the following sections, its results will be put into context and compared to other popular methods. In that, we will determine if Prophets limited potential leads to comparative underperformance, or if it is a viable method to aid in stock market prediction.
 
-
-\
-\
-\
+\newpage
 
 # ARIMA
 \
@@ -3705,7 +3757,7 @@ Due to that, the decision was made to focus on the federal funds interest rate a
 Historical data and projections for the federal interest rate can be downloaded, as shown below, if they have not been already:
 \
 
-```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F,echo =T, results = "hide",tidy =T,tidy.opts=list(width.cutoff=40)}
+```{r, eval = F, class.source = "fold-hide", message =F, warning= F, error =F,echo =T, results = "hide",tidy =T,tidy.opts=list(width.cutoff=40)}
 ### Interest Rate 
 
 # Future projected via quantmod/tidyquant (not needed for month/day set)
@@ -3801,7 +3853,7 @@ fred_int_rate_fut_lag_2 <- data.frame(date = seq(min(msft_monthly_train_a$date[2
 Throughout this analysis the Potential Real US GDP will be utilized. From this point onwards, this feature will be referred to as GDP or Real GDP exclusively, omitting the “potential” prefix. It can be downloaded as such if it was not already:
 \
 
-```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F,echo =T, results = "hide"}
+```{r, eval = F, class.source = "fold-hide", message =F, warning= F, error =F,echo =T, results = "hide"}
 
 ### GDP
 
@@ -3905,7 +3957,7 @@ fred_int_gdp_adj <- cbind(fred_int_rate_adj,fred_rea_gdp_adj)
 This wrangling process is then repeated for the two remaining forecast horizons:
 \
 
-```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F,echo =T, results = "hide"}
+```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F,echo =T, results = "hide",tidy=T,tidy.opts=list(width.cutoff=60)}
 
 #### Interest Rate Regressor for Next-Day Prediction
 
@@ -4056,7 +4108,7 @@ The resulting p-value of 0.01 confirms the null hypothesis, which means the data
 
 
 \
-\
+\newpage
 
 **$\text{\underline{Model Tuning}}$**
 
@@ -4186,7 +4238,7 @@ pacf(msft_month_train_ret, main = "PACF Returns Dataset")
 
 We will consider AR(9), AR(15) and MA(15) models based on the observation of the above plots. 
 
-\
+\newpage
 
 When, in turn, analyzing the ACF and PACF plot of the undifferentiated adjusted close price data, its non-stationary nature is confirmed.
 \
@@ -4479,6 +4531,7 @@ adj_eval_own <- accuracy(preds_own_adj, msft_monthly_test_a$adjusted)[2,2]
 
 ```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo =F}
 # RMSE Results
+options(digits=5)
 arima_preds_eval <- data_frame(Model = c("Returns Auto",
                                          "Adj Auto",
                                          "Returns Self-Tuned",
@@ -4491,7 +4544,8 @@ kbl(arima_preds_eval) %>%
   kable_material_dark(full_width = F) %>% 
   column_spec(2, color = "white", 
               background = spec_color(arima_preds_eval$RMSE[1:4], end = 0.7,
-                                      direction = -1,option="E"))
+                                      direction = -1,option="E")) %>% 
+  kable_styling(latex_options = "hold_position")
 ```
 
 \
@@ -4635,25 +4689,28 @@ inta_eval_auto <- accuracy(preds_auto_adj_i1, msft_monthly_test_a$adjusted)[2,2]
 
 ```
 
-\
+\newpage
 
 We first compare the original returns set auto-estimated model with its modified counterpart. We observe a notable improvement in prediction accuracy, which can be seen in the RMSE results shown below.
 \
 
 ```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo =F, results = "hide"}
+options(digits=5)
 intr_preds_eval <- data_frame(Model = c("Original Returns Model",
                                         "Int Rate Included"),
                               RMSE = c(ret_eval_auto,
                                        intr_eval_auto)) %>% 
   kbl() %>% 
-  kable_material_dark(full_width = F)
+  kable_material_dark(full_width = F) %>% 
+  kable_styling(latex_options = "hold_position")
 
 inta_preds_eval <- data_frame(Model = c("Original Adjusted Close Model",
                                         "Int Rate Included"),
                               RMSE = c(adj_eval_auto,
                                        inta_eval_auto)) %>% 
   kbl() %>% 
-  kable_material_dark(full_width = F)
+  kable_material_dark(full_width = F) %>% 
+  kable_styling(latex_options = "hold_position")
 ```
 
 ```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo =F}
@@ -4720,6 +4777,7 @@ p <- exp(diffinv(preds_auto_ret_i3$mean/100,
                  xi = log(msft_monthly_train_a$adjusted[2510])))
 lag_int_2_eval<- accuracy(p[2:length(p)],msft_monthly_test_a$adjusted)[2]
 
+options(digits=5)
 
 lag_int_eval <- data_frame(Model = c("Unlagged Int Rate",
                                      "Log Diff Int Rate",
@@ -4728,7 +4786,8 @@ lag_int_eval <- data_frame(Model = c("Unlagged Int Rate",
                                        lag_int_1_eval,
                                        lag_int_2_eval)) %>% 
   kbl() %>% 
-  kable_material_dark(full_width = F)
+  kable_material_dark(full_width = F) %>% 
+  kable_styling(latex_options = "hold_position")
 
 ```
 
@@ -4826,21 +4885,23 @@ gdpr_eval_auto <- accuracy(p[2:length(p)],msft_monthly_test_a$adjusted)[2]
 
 gdpa_eval_auto <- accuracy(preds_auto_adj_g1, msft_monthly_test_a$adjusted)[2,2]
 
-
+options(digits=5)
 #
 gdpr_preds_eval <- data_frame(Model = c("Original Returns Model",
                                         "GDP Included"),
                               RMSE = c(ret_eval_auto,
                                        gdpr_eval_auto)) %>% 
   kbl() %>% 
-  kable_material_dark(full_width = F)
+  kable_material_dark(full_width = F) %>% 
+  kable_styling(latex_options = "hold_position")
 
 gdpa_preds_eval <- data_frame(Model = c("Original Adjusted Close Model",
                                         "GDP Included"),
                               RMSE = c(adj_eval_auto,
                                        gdpa_eval_auto)) %>% 
   kbl() %>% 
-  kable_material_dark(full_width = F)
+  kable_material_dark(full_width = F) %>% 
+  kable_styling(latex_options = "hold_position")
 
 ```
 
@@ -4911,6 +4972,7 @@ No improvement on the AICc can be seen for both lagged models. The same can be s
 \
 
 ```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo = F, results ="hide"}
+options(digits=5)
 gdp_tr_eval <-accuracy(preds_auto_ret_g1, msft_month_test_ret)[1,2] # train
 gdp_ts_eval <- accuracy(preds_auto_ret_g1, msft_month_test_ret)[2,2] # test
 lag_gdp_tr_2_eval <- accuracy(preds_auto_ret_g2, msft_month_test_ret)[1,2]
@@ -4928,7 +4990,8 @@ lag_gdp_eval <- data_frame(Model = c("Unlagged GDP",
                                     lag_gdp_ts_2_eval,
                                     lag_gdp_ts_3_eval)) %>% 
   kbl() %>% 
-  kable_material_dark(full_width = F)
+  kable_material_dark(full_width = F) %>% 
+  kable_styling(latex_options = "hold_position")
 
 ```
 
@@ -5014,7 +5077,7 @@ iagr_eval_auto <- accuracy(p[2:length(p)],msft_monthly_test_a$adjusted)[2]
 
 iaga_eval_auto <- accuracy(preds_auto_adj_iag, msft_monthly_test_a$adjusted)[2,2]
 
-
+options(digits=5)
 xregr_preds_eval <- data_frame(Model = c("Original Returns Model",
                                         "Int Rate Included",
                                         "Int Rate + GDP"),
@@ -5022,7 +5085,8 @@ xregr_preds_eval <- data_frame(Model = c("Original Returns Model",
                                        intr_eval_auto,
                                        iagr_eval_auto)) %>% 
   kbl() %>% 
-  kable_material_dark(full_width = F)
+  kable_material_dark(full_width = F) %>% 
+  kable_styling(latex_options = "hold_position")
 
 xrega_preds_eval <- data_frame(Model = c("Original Adjusted Close Model",
                                         "Int Rate Included",
@@ -5031,7 +5095,8 @@ xrega_preds_eval <- data_frame(Model = c("Original Adjusted Close Model",
                                        inta_eval_auto,
                                        iaga_eval_auto)) %>% 
   kbl() %>% 
-  kable_material_dark(full_width = F)
+  kable_material_dark(full_width = F) %>% 
+  kable_styling(latex_options = "hold_position")
 
 
 ```
@@ -5151,11 +5216,13 @@ xreg_fin_preds_eval <- data_frame(Model = c("Self-Estimated Model",
 
 
 ```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo = F}
+options(digits=5)
 kbl(xreg_fin_preds_eval) %>% 
   kable_material_dark(full_width = F) %>% 
   column_spec(2, color = "white", 
               background = spec_color(xreg_fin_preds_eval$RMSE[1:4], end = 0.7,
-                                      direction = -1,option="E"))
+                                      direction = -1,option="E")) %>% 
+  kable_styling(latex_options = "hold_position")
 ```
 
 \
@@ -5260,13 +5327,14 @@ p <- exp(diffinv(preds_day_a2$mean/100,
 day_eval <- accuracy(p[2:length(p)],msft_daily_test_a$adjusted)[2]
 
 #
-
+options(digits=5)
 day_preds_eval <- data_frame(Model = c("Next-Day Prediction with Int Rate",
                                        "Next-Day Prediction without Int Rate"),
                                   RMSE = c(int_day_eval,
                                            day_eval)) %>% 
   kbl() %>% 
-  kable_material_dark(full_width = F) 
+  kable_material_dark(full_width = F) %>% 
+  kable_styling(latex_options = "hold_position")
 ```
 
 ```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo = F}
@@ -5390,7 +5458,7 @@ adj_iag_year_eval <- accuracy(a_preds_year4 ,msft_yearly_test_a$adjusted)[2,2]
 
 
 ##
-
+options(digits=5)
 year_preds_eval <- data_frame(Model = c("Returns set with Int Rate",
                                        "Returns set without Exogenous Regressor",
                                        "Returns set with GDP and Int Rate",
@@ -5403,11 +5471,13 @@ year_preds_eval <- data_frame(Model = c("Returns set with Int Rate",
 ```
 
 ```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo = F}
+options(digits=5)
 kbl(year_preds_eval) %>% 
   kable_material_dark(full_width = F) %>% 
   column_spec(2, color = "white", 
               background = spec_color(year_preds_eval$RMSE[1:4], end = 0.7,
-                                      direction = -1,option="E"))
+                                      direction = -1,option="E")) %>% 
+  kable_styling(latex_options = "hold_position")
 ```
 
 \
@@ -5456,11 +5526,13 @@ eval_arima <- data_frame(Horizon = "Next Day",
 ```
 
 ```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo = F}
+options(digits=5)
 kbl(eval_arima) %>% 
   kable_material_dark(full_width = F) %>% 
   column_spec(2, color = "white", 
               background = spec_color(eval_arima$RMSE[1:3], end = 0.7,
-                                      direction = -1,option="E"))
+                                      direction = -1,option="E")) %>% 
+  kable_styling(latex_options = "hold_position")
 ```
 
 \
@@ -6707,9 +6779,9 @@ $\text{\underline{Hyper-Parameters:}}$
 
 Aside from LSTM’s complex architecture, the modeling procedure can be challenging, due to the various hyper-parameters that have to be considered. For that reason, we will describe an assortment of the most important and impactful, tunable hyper-parameters.
 
+\
 
-
-**Units/ Neurons/ Perceptrons:** \
+_Units/ Neurons/ Perceptrons:_ \
 This parameter refers to the “hidden size” of LSTM cells in any given layer. Used to determine the size of the weight matrices and thus also the size of the feature extracted matrices, that after scaling are added to the cell state.
 
 Dimensions of the weight matrices are calculated:
@@ -6723,28 +6795,28 @@ Dimensions of the weight matrices are thus entirely determined by the unit param
 While a lot of nuance is involved when tuning this parameter, we generally increase it when we expect the data to have a lot of interdependence, or if we believe that there is a lot of hidden information, structure or patterns present in the data that can be extracted. If the hidden size is too large it can lead to overfitting and decreased efficiency. Usually, multiples of 4 are chosen as they better align with matrix dimensions.
 \
 
-**Batch size:** \
+_Batch size:_ \
 Rarely is input data passed to a LSTM model processed one datapoint at a time. Similarly, input data does not have to be passed to LSTM one sequence at a time. The number of samples being passed to the model at a time is specified with the batch size. It is to be noted that batches are not necessarily synonymous with the number of sequences present in the input data. Multiple datapoints can make up a sample while multiple samples make up a batch. As samples can be individual datapoints or sequences, batches can be sequences or a collection of sequences.
 \
 
-**Statefulness:** \
+_Statefulness:_ \
 A model can be stateful or stateless. A stateful LSTM allows for more control over when internal states should be reset. Generally speaking, in a stateful model the last state in a batch will be utilized as initial state in the next. There are many nuances to this argument and it can be use in a variety of ways, especially in combination with return_sequences. \
 To simplify, we can look fundamentally at a stateful model as one treating the input data as a continuous sequence.
 \
 
-**Return sequences:** \
+_Return sequences:_ \
 Specifies if hidden states should be passed to the next layer as input. Can be utilized in a variety of ways to obtain different models. Typically, it is set to TRUE in a stacked LSTM as the hidden states of the entire series are feed forward to each successive layer. The last layer in these type of models is usually an exception. If we want an output of the same dimensions as the input, it is set to TRUE; otherwise, it is set to FALSE to obtain a representation of the last time step.
 \
 
-**Dropout:** \
+_Dropout:_ \
 Specifies the fraction of units to drop for the linear transformation of the inputs. Units are probabilistically excludes from activation and weight updates and it thus acts as regularization method.
 \
 
-**Batch and layer normalization:** \
+_Batch and layer normalization:_ \
 Specifies if batches or layers should be normalized. Either one or no normalization can be included in models. Depending on the data one or the other performs better and is more suitable. These forms of normalization can help to improve convergence, stabilize training and ensure that gradients flow more smoothly during backpropagation.
 \
 
-**Layer activation functions:**
+_Layer activation functions:_
 Activation functions are an integral part of neural networks. A basic LSTM cell already contains sigmoid and tanh activation functions. Additionally, there are various different activation functions available that can be added between layers. To give a simplified explanation, activation function determines how the output of one layer is transformed and passed to its successive layer.
 
 
@@ -7055,10 +7127,12 @@ When each model’s respective prediction accuracy, measured on the RMSE, is eva
 \
 
 ```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo = F}
+options(digits=5)
 lstm_win_eval <- data_frame(Approach = c("Rolling window", "Sliding Window"),
                             RMSE = c(lstm_rw_1_eval,lstm_sw_1_eval)) %>%
   kbl() %>% 
-  kable_material_dark(full_width = F)
+  kable_material_dark(full_width = F)%>% 
+  kable_styling(latex_options = "hold_position")
 
 lstm_win_eval
   
@@ -7241,7 +7315,7 @@ Fundamental Analysis Features: \
 
 - Interest Rate -> Slightly worse than featureless model 
 
-- Volume  > Did not have good results 
+- Volume -> Did not have good results 
 
 Technical Indicators: \
 
@@ -7288,13 +7362,13 @@ In this section we will apply 1D convolutional layers to LSTM models in the form
 We begin with the vector output model which includes many familiar hyper-parameter from the LSTM modeling phase. The hyper-parameter utilized in the convolutional layer, however, are described below.
 \
 
-- **kernel size:** In simplified terms, the kernel size refers to the length of input vectors that are multiplied with the kernel at a time. The kernel slides across the input sequence over each element and multiplies it with weight to obtain an output vector. Thus, if the kernel size is set to 1, the size of the input is the same as the size of the output. If the kernel size is 2, on the other hand, consecutive input vectors are added up after multiplication, producing a smaller sized output. Usually odd values are chosen.
+- _kernel size:_ In simplified terms, the kernel size refers to the length of input vectors that are multiplied with the kernel at a time. The kernel slides across the input sequence over each element and multiplies it with weight to obtain an output vector. Thus, if the kernel size is set to 1, the size of the input is the same as the size of the output. If the kernel size is 2, on the other hand, consecutive input vectors are added up after multiplication, producing a smaller sized output. Usually odd values are chosen.
 
-- **padding:** To counteract the shrinkage of data, we can utilize padding if a same size output vector is desired. While “same” padding adds zeros to the beginning and end of the input vector, “causal” padding adds zeros only at the front.
+- _padding:_ To counteract the shrinkage of data, we can utilize padding if a same size output vector is desired. While “same” padding adds zeros to the beginning and end of the input vector, “causal” padding adds zeros only at the front.
 
-- **strides:** Strides refer to the shifting of steps. This further decreases spatial size. 
+- _strides:_ Strides refer to the shifting of steps. This further decreases spatial size. 
 
-- **filters:** Similar to LSTM units, referring to number of kernels that convolve the data. 
+- _filters:_ Similar to LSTM units, referring to number of kernels that convolve the data. 
 
 \
 
@@ -7378,6 +7452,9 @@ p <- exp(diffinv(lstm_preds_ret_cnn_vo/100,
 
 cnn_lstm_vo_eval <- rmse(p[2:length(p)],msft_monthly_test_l$adjusted)
 
+```
+```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo = F, results ="hide"}
+options(digits=5)
 ```
 
 \
@@ -7489,12 +7566,14 @@ lstm_cnn_fin_eval <- data_frame(Model = c("Final Stacked LSTM",
 ```
 
 ```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo = F}
+options(digits=5)
 lstm_cnn_fin_eval %>% 
   kbl() %>% 
   kable_material_dark(full_width = F) %>% 
   column_spec(2, color = "white", 
               background = spec_color(lstm_cnn_fin_eval$RMSE[1:3], end = 0.7,
-                                      direction = -1,option="E"))
+                                      direction = -1,option="E"))%>% 
+  kable_styling(latex_options = "hold_position")
 ```
 
 \
@@ -7907,12 +7986,14 @@ att_fin_eval <- data_frame(Model = c("Additive Attention",
 
 
 ```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo = F}
+options(digits=5)
 att_fin_eval %>% 
   kbl() %>% 
   kable_material_dark(full_width = F) %>% 
   column_spec(2, color = "white", 
               background = spec_color(att_fin_eval$RMSE[1:3], end = 0.7,
-                                      direction = -1,option="E"))
+                                      direction = -1,option="E")) %>% 
+  kable_styling(latex_options = "hold_position")
 
 
 ```
@@ -8022,10 +8103,13 @@ p <- exp(diffinv(lstm_preds_ret_day/100,
 cnn_lstm_day_eval <- rmse(p[2:length(p)],msft_day_test_l$adjusted)
 
 ```
+```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo = F, results = "hide"}
+options(digits=5)
+```
 
 \
 
-On the specified set tensorflow seed, the model achieves an RMSE of `cnn_lstm_day_eval` on the single future day prediction. 
+On the specified set tensorflow seed, the model achieves an RMSE of `r cnn_lstm_day_eval` on the single future day prediction. 
 
 \
 \
@@ -8112,10 +8196,13 @@ p <- exp(diffinv(lstm_preds_ret_year/100,
 cnn_lstm_year_eval <- rmse(p[2:length(p)],msft_year_test_l$adjusted)
 
 ```
+```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo = F, results = "hide"}
+options(digits=5)
+```
 
 \
 
-On the specified set tensorflow seed, this model obtains surprisingly good results, reflected by an RMSE of `cnn_lstm_year_eval`.
+On the specified set tensorflow seed, this model obtains surprisingly good results, reflected by an RMSE of `r cnn_lstm_year_eval`.
 
 
 \
@@ -8146,12 +8233,14 @@ eval_lstm <- data_frame(Horizon = c("Next-Day","Next-Month","Next-Year"),
 
 
 # For colored values
+options(digits=5)
 eval_lstm %>% 
   kbl() %>% 
   kable_material_dark(full_width = F) %>% 
   column_spec(2, color = "white", 
               background = spec_color(eval_lstm$RMSE[1:3], end = 0.7,
-                                      direction = -1,option="E"))
+                                      direction = -1,option="E")) %>% 
+  kable_styling(latex_options = "hold_position")
 
 ```
 
@@ -8207,7 +8296,7 @@ full_eval <- data_frame(Method = c("Prophet",
                        ) #%>% 
   #kbl() %>% 
 # kable_material_dark(full_width = F)
-
+options(digits=5)
 full_eval %>% 
   kbl() %>% 
   kable_material_dark(full_width = F) %>% 
@@ -8219,7 +8308,8 @@ full_eval %>%
                                       direction = -1,option="E")) %>% 
   column_spec(4, color = "white", 
               background = spec_color(full_eval$"Next-Year Prediction"[1:3], end = 0.7,
-                                      direction = -1,option="E")) 
+                                      direction = -1,option="E")) %>% 
+  kable_styling(latex_options = "hold_position")
 
 
  
@@ -8977,13 +9067,15 @@ AMD – Advanced Micro Devices Inc.              , respectively. \
 \
 
 ```{r, eval = T, class.source = "fold-hide", message =F, warning= F, error =F, echo = F}
+options(digits=5)
 fin_val_day %>% 
   rename(Ticker = ticker) %>% 
   kbl(caption = "One-Day Forecast Horizon") %>% 
   kable_material_dark(full_width = F) %>% 
   column_spec(2, color = "white", 
               background = spec_color(fin_val_day$RMSE[1:6], end = 0.7,
-                                      direction = -1,option="E")) 
+                                      direction = -1,option="E")) %>% 
+  kable_styling(latex_options = "hold_position")
 
 
 fin_val_month %>% 
@@ -8992,7 +9084,8 @@ fin_val_month %>%
   kable_material_dark(full_width = F) %>% 
   column_spec(2, color = "white", 
               background = spec_color(fin_val_month$RMSE[1:6], end = 0.7,
-                                      direction = -1,option="E")) 
+                                      direction = -1,option="E")) %>% 
+  kable_styling(latex_options = "hold_position")
 
 
 fin_val_year %>% 
@@ -9001,7 +9094,8 @@ fin_val_year %>%
   kable_material_dark(full_width = F) %>% 
   column_spec(2, color = "white", 
               background = spec_color(fin_val_year$RMSE[1:6], end = 0.7,
-                                      direction = -1,option="E")) 
+                                      direction = -1,option="E")) %>% 
+  kable_styling(latex_options = "hold_position")
 
 ```
 

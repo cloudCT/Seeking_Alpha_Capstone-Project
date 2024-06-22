@@ -852,7 +852,7 @@ kable(eval_pro)
 # Evaluation of prediction for entire dataset
 
 eval_pro_full %>% 
-  kbl(caption = "Prediction Results for Forecast Horizon") %>% 
+  kbl(caption = "Prediction Results for all Data Points") %>% 
   kable_material_dark(full_width = F) %>% 
   column_spec(2, color = "white", 
               background = spec_color(eval_pro$RMSE[1:3], end = 0.7,

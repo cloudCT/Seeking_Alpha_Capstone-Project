@@ -203,9 +203,9 @@ chartSeries(MSFT,
 chartSeries(MSFT,
             subset = "last 1 year",
             type = "line",
-            TA = NULL,
-            name = "Bollinger Bands")
-addBBands()
+            TA = c(addBBands()),
+            name = "Bollinger Bands") 
+
 
 
 
